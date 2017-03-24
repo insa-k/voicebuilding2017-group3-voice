@@ -3,54 +3,30 @@ plugins {
     id "de.undercouch.download" version "3.2.0"
 }
 
-group 'de.uni-saarland.coli.voicebuilding2017.group1'
+group 'de.uni-saarland.coli.voicebuilding2017.group3'
 version '0.1-SNAPSHOT'
 
 voice {
-    name = 'voicebuilding2017-group1'
-    gender = 'male'
-}
-
-task downloadWavZip(type: de.undercouch.gradle.tasks.download.Download) {
-    src 'https://github.com/yoshegg/voice-andrew-us-data/releases/download/audio/wav.zip'
-    dest buildDir
-    overwrite false
+    name = 'voicebuilding2017-group3'
+    gender = 'female'
 }
 
 task unpackWav(type: Copy) {
-    from zipTree("$buildDir/wav.zip")
+    from zipTree("../VoiceBuilding/resources/wav/wav.zip")
     into buildDir
-    dependsOn downloadWavZip
 }
 
-task downloadMetadata(type: de.undercouch.gradle.tasks.download.Download) {
-    src 'https://github.com/yoshegg/voice-andrew-us-data/archive/master.zip'
-    dest "$buildDir/metadata.zip"
-    overwrite false
-}
 
 task unpackText(type: Copy) {
-    from zipTree("$buildDir/metadata.zip"), {
-        include '**/txt/*.txt'
-        eachFile {
-            it.path = it.name
-        }
-    }
+    from zipTree("../VoiceBuilding/resources/text/text.zip")
     into "$buildDir/text"
     includeEmptyDirs = false
-    dependsOn downloadMetadata
 }
 
 task unpackTextGrids(type: Copy) {
-    from zipTree("$buildDir/metadata.zip"), {
-        include '**/textGrid/*.TextGrid'
-        eachFile {
-            it.path = it.name
-        }
-    }
+    from zipTree("../VoiceBuilding/resources/MAUS_TextGrids/MAUS_TextGrids.zip")
     into "$buildDir/TextGrid"
     includeEmptyDirs = false
-    dependsOn downloadMetadata
 }
 
 task convertTextGrids {
