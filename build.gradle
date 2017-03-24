@@ -11,23 +11,6 @@ voice {
     gender = 'female'
 }
 
-task unpackWav(type: Copy) {
-    from zipTree("../VoiceBuilding/resources/wav/wav.zip")
-    into buildDir
-}
-
-
-task unpackText(type: Copy) {
-    from zipTree("../VoiceBuilding/resources/text/text.zip")
-    into "$buildDir/text"
-    includeEmptyDirs = false
-}
-
-task unpackTextGrids(type: Copy) {
-    from zipTree("../VoiceBuilding/resources/MAUS_TextGrids/MAUS_TextGrids.zip")
-    into "$buildDir/TextGrid"
-    includeEmptyDirs = false
-}
 
 task convertTextGrids {
     ext.labDir = file("$buildDir/lab_maus")
@@ -39,7 +22,7 @@ task convertTextGrids {
             fileTree(buildDir).include('TextGrid/*.TextGrid').each { textGridFile ->
                 def labFile = file("$labDir/${textGridFile.name - 'TextGrid' + 'lab'}")
                 script.println "Read from file... $textGridFile"
-                script.println "Extract tier... 3"
+                script.println "Extract tier... 1"
                 script.println "Save as Xwaves label file... $labFile"
                 script.println "printline Wrote $labFile.name"
             }
@@ -75,13 +58,7 @@ task remapLabels(type: Copy) {
 }
 
 legacyInit {
-    dependsOn unpackWav, unpackText, remapLabels
+    dependsOn remapLabels
 }
 
-configurations.all {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        if (details.requested.name == 'groovy-all') {
-            details.useTarget group: details.requested.group, name: details.requested.name, version: '2.4.7'
-        }
-    }
-}
+
