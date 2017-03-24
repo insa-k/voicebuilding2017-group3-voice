@@ -1,0 +1,111 @@
+plugins {
+    id 'de.dfki.mary.voicebuilding-legacy' version '5.2.0'
+    id "de.undercouch.download" version "3.2.0"
+}
+
+group 'de.uni-saarland.coli.voicebuilding2017.group1'
+version '0.1-SNAPSHOT'
+
+voice {
+    name = 'voicebuilding2017-group1'
+    gender = 'male'
+}
+
+task downloadWavZip(type: de.undercouch.gradle.tasks.download.Download) {
+    src 'https://github.com/yoshegg/voice-andrew-us-data/releases/download/audio/wav.zip'
+    dest buildDir
+    overwrite false
+}
+
+task unpackWav(type: Copy) {
+    from zipTree("$buildDir/wav.zip")
+    into buildDir
+    dependsOn downloadWavZip
+}
+
+task downloadMetadata(type: de.undercouch.gradle.tasks.download.Download) {
+    src 'https://github.com/yoshegg/voice-andrew-us-data/archive/master.zip'
+    dest "$buildDir/metadata.zip"
+    overwrite false
+}
+
+task unpackText(type: Copy) {
+    from zipTree("$buildDir/metadata.zip"), {
+        include '**/txt/*.txt'
+        eachFile {
+            it.path = it.name
+        }
+    }
+    into "$buildDir/text"
+    includeEmptyDirs = false
+    dependsOn downloadMetadata
+}
+
+task unpackTextGrids(type: Copy) {
+    from zipTree("$buildDir/metadata.zip"), {
+        include '**/textGrid/*.TextGrid'
+        eachFile {
+            it.path = it.name
+        }
+    }
+    into "$buildDir/TextGrid"
+    includeEmptyDirs = false
+    dependsOn downloadMetadata
+}
+
+task convertTextGrids {
+    ext.labDir = file("$buildDir/lab_maus")
+    outputs.dir labDir
+    doLast {
+        labDir.mkdirs()
+        def scriptFile = file("$temporaryDir/script.praat")
+        scriptFile.withWriter { script ->
+            fileTree(buildDir).include('TextGrid/*.TextGrid').each { textGridFile ->
+                def labFile = file("$labDir/${textGridFile.name - 'TextGrid' + 'lab'}")
+                script.println "Read from file... $textGridFile"
+                script.println "Extract tier... 3"
+                script.println "Save as Xwaves label file... $labFile"
+                script.println "printline Wrote $labFile.name"
+            }
+        }
+        exec {
+            commandLine 'praat', '--run', scriptFile
+        }
+    }
+}
+
+task remapLabels(type: Copy) {
+    from convertTextGrids.labDir
+    into "$buildDir/lab"
+    dependsOn convertTextGrids
+    filter {
+        def phoneMapping = [
+                '<p:>': '_',
+                'i:'  : 'i',
+                'O:'  : 'O',
+                '3`'  : 'r=',
+                'Q'   : 'A',
+                'R'   : 'r',
+                'u:'  : 'u',
+                'aI'  : 'AI',
+                'eI'  : 'EI'
+        ]
+        def fields = it.tokenize()
+        if (fields.size() == 3) {
+            fields[-1] = phoneMapping[fields[-1]] ?: fields[-1]
+        }
+        fields.join(' ')
+    }
+}
+
+legacyInit {
+    dependsOn unpackWav, unpackText, remapLabels
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.name == 'groovy-all') {
+            details.useTarget group: details.requested.group, name: details.requested.name, version: '2.4.7'
+        }
+    }
+}
