@@ -3,6 +3,9 @@
 # before you start:
 you currently have to drag the .wav files in /build/wav, .txt files in /build/text and the Maus-TextGrids in /build/TextGrid
 
+## for linux-based systems, you can run this script provided you cloned the data repository (https://github.com/BeamMeUpSkoty/VoiceBuilding/)
+sh setUpBuildDirectory.sh
+
 ## Initializing the voice
 ### creating the lab files
 ./gradlew legacyInit
