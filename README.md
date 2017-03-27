@@ -11,5 +11,10 @@ you currently have to drag the .wav files in /build/wav, .txt files in /build/te
 ./gradlew build
 (if you already ran it and it didn't work, you might have to add --rerun-tasks at the end
 
+# Run the voice 
+./gradlew run
+
+##go to:
+http://localhost:59125
 
 
