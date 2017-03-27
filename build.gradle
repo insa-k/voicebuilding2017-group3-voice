@@ -11,6 +11,17 @@ voice {
     gender = 'female'
 }
 
+import org.apache.tools.ant.taskdefs.condition.Os
+task setupBuildDirectory {
+   if ( Os.isFamily(Os.FAMILY_MAC) | Os.isFamily(Os.FAMILY_UNIX)) {
+	exec {
+            commandLine 'sh', "setupBuildDirectory.sh"
+        }
+}
+   else if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+	println "TODO: Write script for creating build directory under windows!!"
+}
+}
 
 task convertTextGrids {
     ext.labDir = file("$buildDir/lab_maus")
@@ -58,7 +69,7 @@ task remapLabels(type: Copy) {
 }
 
 legacyInit {
-    dependsOn remapLabels
+    dependsOn setupBuildDirectory, remapLabels
 }
 
 configurations.all {
