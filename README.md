@@ -9,10 +9,7 @@ you currently have to drag the .wav files in /build/wav, .txt files in /build/te
 
 ## build the voice
 ./gradlew build
-
-./gradlew legacyMCEPMaker
-
-./gradlew legacyWaveTimelineMaker legacyBasenameTimelineMaker legacyMCepTimelineMaker
+(if you already ran it and it didn't work, you might have to add --rerun-tasks at the end
 
 
 
