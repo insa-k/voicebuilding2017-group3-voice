@@ -20,6 +20,7 @@ task downloadWavZip(type: de.undercouch.gradle.tasks.download.Download) {
 }
 
 task unpackWav(type: Copy) {
+    dependsOn downloadWavZip
     from zipTree("resources/wav.zip")
     into "resources/wav/"
     dependsOn downloadWavZip
