@@ -26,7 +26,7 @@ task unpackWav(type: Copy) {
 }
 
 task setupBuildDirectory {
-    dependsOn unpackWav
+   dependsOn unpackWav
    if ( Os.isFamily(Os.FAMILY_MAC) | Os.isFamily(Os.FAMILY_UNIX)) {
 	exec {
             commandLine 'sh', "setupBuildDirectory.sh"
