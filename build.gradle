@@ -53,6 +53,13 @@ task unpackTextGrids(type: Copy) {
     dependsOn downloadMetadata
 }
 
+task removingProblemFiles {
+	dependsOn unpackWav, unpackTextGrids, unpackText
+        exec {
+            commandLine 'sh', "removingProblemFiles.sh"
+        }
+}
+
 task convertTextGrids {
     ext.labDir = file("$buildDir/lab_maus")
     outputs.dir labDir
@@ -99,7 +106,7 @@ task remapLabels(type: Copy) {
 }
 
 legacyInit {
-    dependsOn unpackWav, unpackText, unpackTextGrids, remapLabels
+    dependsOn unpackWav, unpackText, unpackTextGrids, removingProblemFiles, remapLabels
 }
 
 configurations.all {
