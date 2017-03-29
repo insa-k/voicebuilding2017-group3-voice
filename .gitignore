@@ -7,7 +7,7 @@ build/
 build-old/
 
 # resources 
-resources/wav/
+resources/wav/*.wav
 raw-audio/
 resources/wav.zip
 

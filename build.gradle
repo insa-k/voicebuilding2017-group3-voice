@@ -19,23 +19,18 @@ task downloadWavZip(type: de.undercouch.gradle.tasks.download.Download) {
     overwrite false
 }
 
-task unpackWav(type: Copy) {
+task setupBuildDirectory(type: Copy) {
     dependsOn downloadWavZip
+    project.file("resources/wav").mkdirs()
     from zipTree("resources/wav.zip")
     into "resources/wav/"
-}
-
-task setupBuildDirectory {
-   dependsOn unpackWav
-   if ( Os.isFamily(Os.FAMILY_MAC) | Os.isFamily(Os.FAMILY_UNIX)) {
+    doLast {
 	exec {
             commandLine 'sh', "setupBuildDirectory.sh"
         }
 }
-   else if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-	println "TODO: Write script for creating build directory under windows!!"
 }
-}
+
 
 task convertTextGrids {
     dependsOn setupBuildDirectory
@@ -84,7 +79,7 @@ task remapLabels(type: Copy) {
 }
 
 legacyInit {
-    dependsOn unpackWav, setupBuildDirectory, remapLabels
+    dependsOn setupBuildDirectory, remapLabels
 }
 
 configurations.all {
