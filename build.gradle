@@ -23,10 +23,10 @@ task unpackWav(type: Copy) {
     dependsOn downloadWavZip
     from zipTree("resources/wav.zip")
     into "resources/wav/"
-    dependsOn downloadWavZip
 }
 
 task setupBuildDirectory {
+    dependsOn unpackWav
    if ( Os.isFamily(Os.FAMILY_MAC) | Os.isFamily(Os.FAMILY_UNIX)) {
 	exec {
             commandLine 'sh', "setupBuildDirectory.sh"
@@ -38,6 +38,7 @@ task setupBuildDirectory {
 }
 
 task convertTextGrids {
+    dependsOn setupBuildDirectory
     ext.labDir = file("$buildDir/lab_maus")
     outputs.dir labDir
     doLast {
