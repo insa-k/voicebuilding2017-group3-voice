@@ -5,6 +5,11 @@
 .gradle/
 build/
 build-old/
+
+# resources 
+resources/wav/
+raw-audio/
+
 # IDEA
 .idea/
 *.iml

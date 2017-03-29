@@ -7,9 +7,9 @@ mkdir -p build/wav
 mkdir -p build/text
 mkdir -p build/TextGrid
 
-cp -n ../VoiceBuilding/resources/wav/*.wav build/wav/
-cp -n ../VoiceBuilding/resources/text/*.txt build/text/
-cp -n ../VoiceBuilding/resources/MAUS_TextGrids_combined/*.TextGrid build/TextGrid/
+cp -n resources/wav/*.wav build/wav/
+cp -n resources/text/*.txt build/text/
+cp -n resources/TextGrids/MAUS_TextGrids/*.TextGrid build/TextGrid/
 
 ## removing files that create problems
 rm -f  build/text/arctic_a0277.txt build/text/arctic_b0152.txt build/text/arctic_a0282.txt build/text/arctic_a0309.txt build/text/arctic_a0402.txt build/text/arctic_a0403.txt build/text/arctic_a0589.txt build/text/arctic_b0132.txt build/text/arctic_b0152.txt 
