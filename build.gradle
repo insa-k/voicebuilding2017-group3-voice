@@ -55,12 +55,15 @@ task unpackTextGrids(type: Copy) {
 
 task removingProblemFiles {
 	dependsOn unpackWav, unpackTextGrids, unpackText
+	doLast {
         exec {
             commandLine 'sh', "removingProblemFiles.sh"
         }
+	}
 }
 
 task convertTextGrids {
+    dependsOn removingProblemFiles
     ext.labDir = file("$buildDir/lab_maus")
     outputs.dir labDir
     doLast {
