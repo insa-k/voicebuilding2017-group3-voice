@@ -18,7 +18,7 @@ you currently have to drag the .wav files in /build/wav, .txt files in /build/te
 # Run the voice 
 ./gradlew run
 
-##go to:
+## go to:
 http://localhost:59125
 
 
