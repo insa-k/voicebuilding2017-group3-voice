@@ -9,6 +9,7 @@ build-old/
 # resources 
 resources/wav/
 raw-audio/
+resources/wav.zip
 
 # IDEA
 .idea/

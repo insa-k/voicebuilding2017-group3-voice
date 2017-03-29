@@ -12,6 +12,19 @@ voice {
 }
 
 import org.apache.tools.ant.taskdefs.condition.Os
+
+task downloadWavZip(type: de.undercouch.gradle.tasks.download.Download) {
+    src 'https://github.com/insa-k/voicebuilding2017-group3-data/releases/download/wav/wav.zip'
+    dest "resources/"
+    overwrite false
+}
+
+task unpackWav(type: Copy) {
+    from zipTree("resources/wav.zip")
+    into "resources/wav/"
+    dependsOn downloadWavZip
+}
+
 task setupBuildDirectory {
    if ( Os.isFamily(Os.FAMILY_MAC) | Os.isFamily(Os.FAMILY_UNIX)) {
 	exec {
@@ -69,7 +82,7 @@ task remapLabels(type: Copy) {
 }
 
 legacyInit {
-    dependsOn setupBuildDirectory, remapLabels
+    dependsOn unpackWav, setupBuildDirectory, remapLabels
 }
 
 configurations.all {
