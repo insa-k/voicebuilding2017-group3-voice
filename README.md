@@ -7,7 +7,7 @@
 ## build the voice
 ./gradlew build
 
-(if you already ran it and it didn't work, you might have to add --rerun-tasks at the end
+(if you already ran it and it didn't work, you might have to add --rerun-tasks at the end)
 
 # Run the voice 
 ./gradlew run
