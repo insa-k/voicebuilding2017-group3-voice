@@ -1,6 +1,3 @@
-## this requires the data repository (https://github.com/BeamMeUpSkoty/VoiceBuilding/) to be in the same directory as this voice repository
-## also the praat script that creates the .wav files has to be run before 
-
 mkdir -p build
 
 mkdir -p build/wav
