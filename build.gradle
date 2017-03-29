@@ -11,16 +11,46 @@ voice {
     gender = 'female'
 }
 
-import org.apache.tools.ant.taskdefs.condition.Os
-task setupBuildDirectory {
-   if ( Os.isFamily(Os.FAMILY_MAC) | Os.isFamily(Os.FAMILY_UNIX)) {
-	exec {
-            commandLine 'sh', "setupBuildDirectory.sh"
+task downloadMetadata(type: de.undercouch.gradle.tasks.download.Download) {
+    src 'https://github.com/insa-k/voicebuilding2017-group3-voice/releases/download/metadata/metadata.zip'
+    dest "$buildDir/metadata.zip"
+    overwrite false
+}
+
+task unpackWav(type: Copy) {
+    from zipTree("$buildDir/metadata.zip"), {
+        include '**/wav/*.wav'
+        eachFile {
+            it.path = it.name
         }
+    }
+    into "$buildDir/wav"
+    includeEmptyDirs = false
+    dependsOn downloadMetadata
 }
-   else if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-	println "TODO: Write script for creating build directory under windows!!"
+
+task unpackText(type: Copy) {
+    from zipTree("$buildDir/metadata.zip"), {
+        include '**/text/*.txt'
+        eachFile {
+            it.path = it.name
+        }
+    }
+    into "$buildDir/text"
+    includeEmptyDirs = false
+    dependsOn downloadMetadata
 }
+
+task unpackTextGrids(type: Copy) {
+    from zipTree("$buildDir/metadata.zip"), {
+        include '**/MAUS_TextGrids/*.TextGrid'
+        eachFile {
+            it.path = it.name
+        }
+    }
+    into "$buildDir/TextGrid"
+    includeEmptyDirs = false
+    dependsOn downloadMetadata
 }
 
 task convertTextGrids {
@@ -69,7 +99,7 @@ task remapLabels(type: Copy) {
 }
 
 legacyInit {
-    dependsOn setupBuildDirectory, remapLabels
+    dependsOn unpackWav, unpackText, unpackTextGrids, remapLabels
 }
 
 configurations.all {
