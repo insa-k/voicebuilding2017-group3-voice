@@ -1,6 +1,10 @@
 # voicebuilding2017-group3-voice
+## Prerequisites
+Install SoX, Edinburgh Speech Tools and Praat
 
 ## Initializing the voice
+git clone https://github.com/insa-k/voicebuilding2017-group3-voice.git
+
 ### creating the lab files
 ./gradlew legacyInit
 
